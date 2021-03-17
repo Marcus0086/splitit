@@ -18,6 +18,7 @@ class DetailsScreen extends StatelessWidget {
         children: <Widget>[
           Container(
               height: size.height * .45,
+              width: size.width,
               decoration: BoxDecoration(
                 color: kBlueColor,
                 borderRadius: BorderRadius.only(

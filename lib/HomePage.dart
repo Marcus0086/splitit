@@ -52,17 +52,18 @@ class HomePage extends StatelessWidget {
                   Align(
                     alignment: Alignment.topRight,
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(100),
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
+                          splashColor: kShadowColor,
                           onTap: () => _drawerKey.currentState.openDrawer(),
                           child: Container(
                             alignment: Alignment.center,
                             height: size.height * .05,
                             width: size.width * .12,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(100),
                               color: Color(0xFF817DCF),
                             ),
                             child: SvgPicture.asset("assets/icons/menu.svg"),

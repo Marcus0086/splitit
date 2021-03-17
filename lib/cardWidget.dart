@@ -33,7 +33,7 @@ class CardWidget extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            splashColor: Colors.orange[50],
+            splashColor: kShadowColor,
             onTap: press,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
