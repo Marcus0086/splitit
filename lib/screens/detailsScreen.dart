@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:covidui/bottomNav.dart';
 import 'package:covidui/constants.dart';
 import 'package:covidui/searchBar.dart';
@@ -17,16 +18,24 @@ class DetailsScreen extends StatelessWidget {
       body: Stack(
         children: <Widget>[
           Container(
-              height: size.height * .45,
-              width: size.width,
-              decoration: BoxDecoration(
-                color: kBlueColor,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(15),
-                  bottomRight: Radius.circular(15),
-                ),
+            height: size.height * .45,
+            width: size.width,
+            decoration: BoxDecoration(
+              color: kBlueColor,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(15),
+                bottomRight: Radius.circular(15),
               ),
-              child: SvgPicture.asset("assets/icons/paymentsscreens.svg")),
+            ),
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: SvgPicture.asset(
+                "assets/icons/paymentsscreens.svg",
+                width: size.width * .3,
+                height: size.height * .3,
+              ),
+            ),
+          ),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(
@@ -36,25 +45,55 @@ class DetailsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(
-                      height: size.height * .05,
-                    ),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Payments",
-                        style: Theme.of(context).textTheme.headline3.copyWith(
-                            fontWeight: FontWeight.w900, color: Colors.white),
-                      ),
-                    ),
-                    SizedBox(
-                      height: size.height * .09,
+                    Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: size.height * .02,
+                        ),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: AutoSizeText(
+                            "Payments",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline3
+                                .copyWith(
+                                    fontWeight: FontWeight.w900,
+                                    color: kTextColor),
+                          ),
+                        ),
+                        SizedBox(
+                          height: size.height * .03,
+                        ),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: AutoSizeText(
+                            "If you think nobody cares about you then\ntry missing a couple of car payments../",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline3
+                                .copyWith(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400,
+                                    color: kTextColor),
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(
                       width: size.width,
                       child: SearchBarWidget(
                         hintText: "Search Payments!",
+                        key: UniqueKey(),
                       ),
+                    ),
+                    Text(
+                      "All Payments",
+                      style: Theme.of(context).textTheme.subtitle2.copyWith(
+                          fontWeight: FontWeight.bold, color: kTextColor),
+                    ),
+                    SizedBox(
+                      height: size.height * .02,
                     ),
                     Wrap(
                       spacing: 20,
@@ -72,14 +111,12 @@ class DetailsScreen extends StatelessWidget {
                           .toList(),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: size.height * .02,
                     ),
                     Text(
                       "Last Transaction",
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle2
-                          .copyWith(fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.subtitle2.copyWith(
+                          fontWeight: FontWeight.bold, color: kTextColor),
                     ),
                     Container(
                       margin: EdgeInsets.symmetric(
@@ -146,7 +183,7 @@ class ScreenCards extends StatelessWidget {
   final Function press;
   const ScreenCards({
     Key key,
-    @required this.size,
+    this.size,
     this.sessionNo,
     this.isDone = false,
     this.press,
@@ -166,11 +203,11 @@ class ScreenCards extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(15)),
             boxShadow: [
               BoxShadow(
-                offset: Offset(0, 17),
-                spreadRadius: -13,
-                blurRadius: 23,
                 color: kShadowColor,
-              ),
+                offset: Offset(0, 17),
+                spreadRadius: -23,
+                blurRadius: 17,
+              )
             ],
           ),
           child: Material(

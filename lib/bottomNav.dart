@@ -1,12 +1,11 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:covidui/constants.dart';
+import 'package:covidui/screens/newSplit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class BottomNavWidget extends StatefulWidget {
   const BottomNavWidget({
     Key key,
-    @required this.size,
+    this.size,
   }) : super(key: key);
 
   final Size size;
@@ -27,19 +26,28 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
         vertical: 10,
       ),
       decoration: BoxDecoration(
-        color: Colors.white70,
+        color: Colors.white,
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(15),
           topLeft: Radius.circular(15),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: kShadowColor,
+            offset: Offset(0, 17),
+            spreadRadius: -23,
+            blurRadius: 17,
+          )
+        ],
       ),
       height: widget.size.height * .08,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           BottomIcons(
-            svg: "calendar.svg",
-            text: "today",
+            svg: isActive1
+                ? Icons.calendar_today_rounded
+                : Icons.calendar_today_outlined,
             isActive: isActive1,
             press: () {
               setState(() {
@@ -48,28 +56,24 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
                 isActive3 = false;
               });
             },
+            key: UniqueKey(),
           ),
           BottomIcons(
-            svg: "home.svg",
-            text: "Home",
+            svg: isActive2 ? Icons.add_box_rounded : Icons.add_box_outlined,
             isActive: isActive2,
             press: () {
-              if (ModalRoute.of(context).settings.name != '/') {
-                setState(() {
-                  isActive2 = true;
-                });
-              } else {
-                setState(() {
-                  isActive1 = false;
-                  isActive3 = false;
-                });
-              }
-              Navigator.popUntil(context, ModalRoute.withName('/'));
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return NewSplit();
+              }));
+              setState(() {
+                isActive1 = false;
+                isActive2 = true;
+                isActive3 = false;
+              });
             },
           ),
           BottomIcons(
-            svg: "Settings.svg",
-            text: "Settings",
+            svg: isActive3 ? Icons.settings_rounded : Icons.settings_outlined,
             isActive: isActive3,
             press: () {
               setState(() {
@@ -86,14 +90,12 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
 }
 
 class BottomIcons extends StatefulWidget {
-  final String svg;
-  final String text;
+  final IconData svg;
   final Function press;
   final bool isActive;
   const BottomIcons({
     Key key,
     this.svg,
-    this.text,
     this.press,
     this.isActive = false,
   }) : super(key: key);
@@ -104,25 +106,15 @@ class BottomIcons extends StatefulWidget {
 class _BottomIconsState extends State<BottomIcons> {
   @override
   Widget build(BuildContext context) {
-    var text = widget.text;
     var svg = widget.svg;
     return GestureDetector(
       onTap: widget.press,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          SvgPicture.asset(
-            "assets/icons/$svg",
-            color: widget.isActive ? kActiveIconColor : kTextColor,
-            width: MediaQuery.of(context).size.width * .02,
-            height: MediaQuery.of(context).size.height * .02,
-          ),
-          AutoSizeText(
-            "$text",
-            style: TextStyle(
-                color: widget.isActive ? kActiveIconColor : kTextColor,
-                fontSize: 10),
-          ),
+          RadiantGradientMask(
+              child: Icon(svg, color: Colors.white, size: 25),
+              colors: [Colors.deepPurple, Colors.deepPurpleAccent]),
         ],
       ),
     );

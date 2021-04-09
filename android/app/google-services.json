@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "263207493342",
+    "firebase_url": "https://myapp-a7e57.firebaseio.com",
+    "project_id": "myapp-a7e57",
+    "storage_bucket": "myapp-a7e57.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263207493342:android:691c34b7a53694f08fec4f",
+        "android_client_info": {
+          "package_name": "com.example.covidui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "263207493342-hc5th4v5vep6rnlamsq9n4rttbrch2v6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.covidui",
+            "certificate_hash": "56fffb1269c83bb42f431b4f446b71d28ba4a4ed"
+          }
+        },
+        {
+          "client_id": "263207493342-4p6efaogt4gqjsgug4a48mig1aftevd2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbX8dQIQ0VVU-FJDWFpSGhNEiCKNsTxRk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "263207493342-4p6efaogt4gqjsgug4a48mig1aftevd2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

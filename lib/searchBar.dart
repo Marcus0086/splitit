@@ -5,7 +5,7 @@ class SearchBarWidget extends StatelessWidget {
   final String hintText;
   const SearchBarWidget({
     Key key,
-    @required this.hintText,
+    this.hintText,
   }) : super(key: key);
 
   @override
