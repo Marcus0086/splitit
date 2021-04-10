@@ -71,6 +71,7 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
                 isActive3 = false;
               });
             },
+            key: UniqueKey(),
           ),
           BottomIcons(
             svg: isActive3 ? Icons.settings_rounded : Icons.settings_outlined,
@@ -82,6 +83,7 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
                 isActive2 = false;
               });
             },
+            key: UniqueKey(),
           ),
         ],
       ),
@@ -113,7 +115,7 @@ class _BottomIconsState extends State<BottomIcons> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           RadiantGradientMask(
-              child: Icon(svg, color: Colors.white, size: 25),
+              child: Icon(svg, color: Colors.white, size: 26),
               colors: [Colors.deepPurple, Colors.deepPurpleAccent]),
         ],
       ),

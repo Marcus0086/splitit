@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:covidui/auth.dart';
 import 'package:covidui/bottomNav.dart';
 import 'package:covidui/cardWidget.dart';
@@ -19,18 +21,35 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  User user;
+  bool isSigningOut = false;
+
+  Route _routeToSignInScreen() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(-1.0, 0.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
+
   void initState() {
+    user = widget.user;
     super.initState();
-    if (widget.user == null) {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => LoginPage()));
-    }
   }
 
   getScreen(var screen, var context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return screen;
-    }));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
 
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
@@ -42,12 +61,7 @@ class _HomePageState extends State<HomePage> {
       drawer: SideBar(
         key: UniqueKey(),
         user: widget.user,
-        press: () {
-          signOutGoogle().then((e) {
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => LoginPage()));
-          });
-        },
+        route: _routeToSignInScreen(),
       ),
       bottomNavigationBar: BottomNavWidget(
         size: size,
@@ -150,12 +164,19 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class SideBarUser extends StatelessWidget {
+class SideBarUser extends StatefulWidget {
   final size;
   final drawerKey;
   final User user;
-  const SideBarUser({Key key, this.size, this.drawerKey, @required this.user})
+
+  const SideBarUser({Key key, this.size, this.drawerKey, this.user})
       : super(key: key);
+  @override
+  _SideBarUserState createState() => _SideBarUserState();
+}
+
+class _SideBarUserState extends State<SideBarUser> {
+  bool isClicked = false;
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -166,20 +187,40 @@ class SideBarUser extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             splashColor: kShadowColor,
-            onTap: () => drawerKey.currentState.openDrawer(),
+            onTap: () {
+              setState(() {
+                isClicked = true;
+              });
+              widget.drawerKey.currentState.openDrawer();
+              Timer(Duration(seconds: 1), () {
+                setState(() {
+                  isClicked = false;
+                });
+              });
+            },
             child: Container(
               alignment: Alignment.center,
-              height: size.height * .04,
-              width: size.width * .10,
+              height: widget.size.height * .045,
+              width: widget.size.width * .1,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
                 color: Color(0xFF817DCF),
               ),
               child: CircleAvatar(
-                child: ClipOval(
-                  child: user.photoURL != null
-                      ? Image(image: NetworkImage(user.photoURL.toString()))
-                      : SvgPicture.asset('assets/icons/profile.svg'),
+                backgroundColor: isClicked ? Colors.blue : Colors.transparent,
+                radius: 60.0,
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: CircleAvatar(
+                    radius: 60.0,
+                    child: ClipOval(
+                      child: widget.user.photoURL != null
+                          ? Image(
+                              image:
+                                  NetworkImage(widget.user.photoURL.toString()))
+                          : SvgPicture.asset('assets/icons/profile.svg'),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -190,23 +231,23 @@ class SideBarUser extends StatelessWidget {
   }
 }
 
-class SideBar extends StatelessWidget {
+class SideBar extends StatefulWidget {
   final User user;
-  final Function press;
-  SideBar({
-    Key key,
-    this.user,
-    this.press,
-  }) : super(key: key);
+  final Route route;
+  const SideBar({Key key, this.user, this.route}) : super(key: key);
+  @override
+  _SideBarState createState() => _SideBarState();
+}
+
+class _SideBarState extends State<SideBar> {
   @override
   Widget build(BuildContext context) {
-    var photo = user.photoURL.toString();
     var key = UniqueKey().toString();
-    var accountName = user.displayName != null
-        ? user.displayName.toString()
+    var accountName = widget.user.displayName != null
+        ? widget.user.displayName.toString()
         : 'User' + key.substring(1, key.length - 1);
-    var email = user.email != null
-        ? user.email.toString()
+    var email = widget.user.email != null
+        ? widget.user.email.toString()
         : "test" + key.substring(1, key.length - 1) + "@gmail.com";
     return Drawer(
       child: Column(
@@ -237,8 +278,10 @@ class SideBar extends StatelessWidget {
                   ),
                   currentAccountPicture: CircleAvatar(
                     child: ClipOval(
-                        child: user.photoURL != null
-                            ? Image(image: NetworkImage(photo))
+                        child: widget.user.photoURL != null
+                            ? Image(
+                                image: NetworkImage(
+                                    widget.user.photoURL.toString()))
                             : SvgPicture.asset('assets/icons/male.svg')),
                   ),
                 ),
@@ -251,8 +294,12 @@ class SideBar extends StatelessWidget {
               child: Container(
                 child: Material(
                     color: Colors.transparent,
-                    child:
-                        InkWell(onTap: this.press, child: Icon(Icons.logout))),
+                    child: InkWell(
+                        onTap: () async {
+                          await signOutGoogle(context: context);
+                          Navigator.of(context).pushReplacement(widget.route);
+                        },
+                        child: Icon(Icons.logout))),
               ),
             ),
           ),

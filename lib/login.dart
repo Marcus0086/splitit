@@ -21,29 +21,6 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   User user;
 
-  void initState() {
-    super.initState();
-    if (this.user != null) {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => HomePage(user: this.user)));
-    }
-  }
-
-  void click() async {
-    await signInWithGoogle().then((user) {
-      this.user = user;
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => HomePage(user: this.user)));
-    });
-  }
-
-  void signInAnonymously() async {
-    await auth.signInAnonymously().then((result) => {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => HomePage(user: result.user))),
-        });
-  }
-
   Widget button(
       Size size, Function press, String text, Color color, Widget customIcon) {
     return Container(
@@ -96,37 +73,64 @@ class _BodyState extends State<Body> {
           height: size.height * .3,
         ),
         SizedBox(height: size.height * .1),
-        button(
-          size,
-          this.click,
-          'Log In With Google!',
-          kBlueColor,
-          SvgPicture.asset(
-            'assets/icons/google.svg',
-            height: size.height * .025,
-          ),
+        FutureBuilder(
+          future: initializeFirebase(context: context),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Error initializing Firebase');
+            } else if (snapshot.connectionState == ConnectionState.done) {
+              return SignInButton(
+                key: UniqueKey(),
+                press: signInWithGoogle,
+                text: 'Sign In with Google',
+                icon: SvgPicture.asset(
+                  'assets/icons/google.svg',
+                  height: size.height * .03,
+                  width: size.width * .03,
+                ),
+                color: kBlueColor,
+              );
+            }
+            return CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Colors.orange,
+              ),
+            );
+          },
         ),
         SizedBox(
-          height: size.height * .05,
+          height: size.height * .025,
           width: size.width * .5,
           child: Align(
             alignment: Alignment.center,
             child: Divider(),
           ),
         ),
-        button(
-            size,
-            this.signInAnonymously,
-            'Log In as Test User',
-            Color(0xFFfdcf84),
-            RadiantGradientMask(
-              colors: [Colors.deepPurpleAccent, Colors.deepPurple],
-              child: Icon(
-                Icons.account_circle_sharp,
-                color: Colors.white,
-                size: 20,
+        FutureBuilder(
+          future: initializeFirebase(context: context),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Error initializing Firebase');
+            } else if (snapshot.connectionState == ConnectionState.done) {
+              return SignInButton(
+                key: UniqueKey(),
+                press: signInAnonymously,
+                text: 'Sign In with Guest!',
+                icon: Icon(
+                  Icons.account_circle_sharp,
+                  color: Colors.white,
+                  size: 25,
+                ),
+                color: kBlueColor,
+              );
+            }
+            return CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Colors.orange,
               ),
-            )),
+            );
+          },
+        ),
       ],
     ));
   }
@@ -163,6 +167,82 @@ class Background extends StatelessWidget {
           child,
         ],
       ),
+    );
+  }
+}
+
+class SignInButton extends StatefulWidget {
+  final Function press;
+  final String text;
+  final Widget icon;
+  final Color color;
+  const SignInButton({Key key, this.press, this.text, this.icon, this.color})
+      : super(key: key);
+  @override
+  _SignInButtonState createState() => _SignInButtonState();
+}
+
+class _SignInButtonState extends State<SignInButton> {
+  bool _isSigningIn = false;
+
+  @override
+  Widget build(BuildContext context) {
+    var text = widget.text;
+    var icon = widget.icon;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: _isSigningIn
+          ? CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(widget.color),
+            )
+          : TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(widget.color),
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                ),
+              ),
+              onPressed: () async {
+                setState(() {
+                  _isSigningIn = true;
+                });
+                User user = await widget.press();
+                setState(() {
+                  _isSigningIn = false;
+                });
+                if (user != null) {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => HomePage(
+                            user: user,
+                          )));
+                }
+              },
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    icon,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text(
+                        '$text',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
     );
   }
 }
