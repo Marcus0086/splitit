@@ -1,11 +1,12 @@
 import 'package:covidui/constants.dart';
-import 'package:covidui/screens/newSplit.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavWidget extends StatefulWidget {
+  final Icon svg;
   const BottomNavWidget({
     Key key,
     this.size,
+    this.svg,
   }) : super(key: key);
 
   final Size size;
@@ -31,6 +32,7 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
           topRight: Radius.circular(15),
           topLeft: Radius.circular(15),
         ),
+        border: Border.all(color: kBlueLightColor),
         boxShadow: [
           BoxShadow(
             color: kShadowColor,
@@ -51,7 +53,7 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
             isActive: isActive1,
             press: () {
               setState(() {
-                isActive1 = true;
+                isActive1 = !isActive1;
                 isActive2 = false;
                 isActive3 = false;
               });
@@ -59,26 +61,24 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
             key: UniqueKey(),
           ),
           BottomIcons(
-            svg: isActive2 ? Icons.add_box_rounded : Icons.add_box_outlined,
-            isActive: isActive2,
-            press: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return NewSplit();
-              }));
-              setState(() {
-                isActive1 = false;
-                isActive2 = true;
-                isActive3 = false;
-              });
-            },
-            key: UniqueKey(),
-          ),
+              svg: widget.svg != null
+                  ? (isActive2 ? Icons.home_rounded : Icons.home_outlined)
+                  : null,
+              isActive: isActive2,
+              press: () {
+                setState(() {
+                  isActive2 = !isActive2;
+                  isActive1 = false;
+                  isActive3 = false;
+                  Navigator.of(context).pop();
+                });
+              }),
           BottomIcons(
             svg: isActive3 ? Icons.settings_rounded : Icons.settings_outlined,
             isActive: isActive3,
             press: () {
               setState(() {
-                isActive3 = true;
+                isActive3 = !isActive3;
                 isActive1 = false;
                 isActive2 = false;
               });

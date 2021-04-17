@@ -15,11 +15,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "263207493342-hc5th4v5vep6rnlamsq9n4rttbrch2v6.apps.googleusercontent.com",
+          "client_id": "263207493342-3i7m6emkngsa1ajplajluglioikvicmf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.covidui",
-            "certificate_hash": "56fffb1269c83bb42f431b4f446b71d28ba4a4ed"
+            "certificate_hash": "3475d24ef0613476d0b6ebaf56a2459d93a2a7a1"
+          }
+        },
+        {
+          "client_id": "263207493342-mgg5l4ifp8ev2obhusi1nndu3fvmh4fk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.covidui",
+            "certificate_hash": "9769d9b2a46a2b6bbf0aa81a1caf5f9c482cd5b3"
           }
         },
         {

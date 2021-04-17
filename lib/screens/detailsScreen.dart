@@ -13,6 +13,7 @@ class DetailsScreen extends StatelessWidget {
     List<int> screenCards = [1, 2, 3, 4, 5, 6];
     return Scaffold(
       bottomNavigationBar: BottomNavWidget(
+        svg: Icon(Icons.home_outlined),
         size: size,
       ),
       body: Stack(

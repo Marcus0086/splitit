@@ -1,10 +1,15 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covidui/HomePage.dart';
 import 'package:covidui/constants.dart';
+import 'package:covidui/store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'auth.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -52,6 +57,8 @@ class _BodyState extends State<Body> {
     );
   }
 
+  String _openInsta = 'https://www.instagram.com/raghav0gupta/';
+  String _opengit = 'https://github.com/Marcus0086';
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -67,10 +74,13 @@ class _BodyState extends State<Body> {
                 fontSize: 40,
               ),
         ),
-        SizedBox(height: size.height * .1),
-        SvgPicture.asset(
-          'assets/icons/login_back.svg',
-          height: size.height * .3,
+        SizedBox(height: size.height * .08),
+        Flexible(
+          flex: 1,
+          child: SvgPicture.asset(
+            'assets/icons/login_back.svg',
+            height: size.height * .25,
+          ),
         ),
         SizedBox(height: size.height * .1),
         FutureBuilder(
@@ -85,8 +95,34 @@ class _BodyState extends State<Body> {
                 text: 'Sign In with Google',
                 icon: SvgPicture.asset(
                   'assets/icons/google.svg',
-                  height: size.height * .03,
-                  width: size.width * .03,
+                  height: size.height * .02,
+                  width: size.width * .02,
+                ),
+                color: kBlueColor,
+              );
+            }
+            return CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Colors.orange,
+              ),
+            );
+          },
+        ),
+        SizedBox(height: size.height * .025),
+        FutureBuilder(
+          future: initializeFirebase(context: context),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Error initializing Firebase');
+            } else if (snapshot.connectionState == ConnectionState.done) {
+              return SignInButton(
+                key: UniqueKey(),
+                press: signInAnonymously,
+                text: 'Sign In with Guest!',
+                icon: Icon(
+                  Icons.account_circle_sharp,
+                  color: Colors.white,
+                  size: 20,
                 ),
                 color: kBlueColor,
               );
@@ -103,33 +139,51 @@ class _BodyState extends State<Body> {
           width: size.width * .5,
           child: Align(
             alignment: Alignment.center,
-            child: Divider(),
+            child: Divider(
+              color: Colors.grey[800],
+            ),
           ),
         ),
-        FutureBuilder(
-          future: initializeFirebase(context: context),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Text('Error initializing Firebase');
-            } else if (snapshot.connectionState == ConnectionState.done) {
-              return SignInButton(
-                key: UniqueKey(),
-                press: signInAnonymously,
-                text: 'Sign In with Guest!',
-                icon: Icon(
-                  Icons.account_circle_sharp,
-                  color: Colors.white,
-                  size: 25,
-                ),
-                color: kBlueColor,
-              );
-            }
-            return CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                Colors.orange,
+        Container(
+          width: size.width * .6,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Copyright by AdditcoX 2021',
+                style: GoogleFonts.montserrat(fontSize: 10),
               ),
-            );
-          },
+              SizedBox(height: size.height * .015),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                      onPressed: () async {
+                        await canLaunch(_openInsta)
+                            ? await launch(_openInsta)
+                            : customSnackBar(
+                                content: 'Cannot open url $_openInsta');
+                      },
+                      icon: FaIcon(FontAwesomeIcons.instagram,
+                          color: kBlueColor)),
+                  IconButton(
+                      onPressed: () async {
+                        await canLaunch(_opengit)
+                            ? await launch(_opengit)
+                            : customSnackBar(
+                                content: 'Cannot open url $_opengit');
+                      },
+                      icon: FaIcon(FontAwesomeIcons.github, color: kBlueColor)),
+                  IconButton(
+                      onPressed: () {},
+                      icon: FaIcon(FontAwesomeIcons.exclamation,
+                          color: kBlueColor)),
+                ],
+              ),
+            ],
+          ),
         ),
       ],
     ));
@@ -213,6 +267,13 @@ class _SignInButtonState extends State<SignInButton> {
                   _isSigningIn = false;
                 });
                 if (user != null) {
+                  await firestoreInstance
+                      .collection('users')
+                      .doc(user.uid)
+                      .set({
+                    'email': user.email,
+                    'photoURL': user.photoURL,
+                  }, SetOptions(merge: true));
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => HomePage(
                             user: user,

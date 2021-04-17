@@ -1,16 +1,14 @@
-import 'dart:async';
-
-import 'package:covidui/auth.dart';
 import 'package:covidui/bottomNav.dart';
 import 'package:covidui/cardWidget.dart';
 import 'package:covidui/constants.dart';
 import 'package:covidui/login.dart';
-import 'package:covidui/screens/detailsScreen.dart';
-import 'package:covidui/screens/newSplit.dart';
+import 'package:covidui/screens/billSplitter.dart';
+import 'package:covidui/screens/friendsPage.dart';
+import 'package:covidui/screens/recentSplit.dart';
 import 'package:covidui/searchBar.dart';
+import 'package:covidui/sidebar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class HomePage extends StatefulWidget {
   final User user;
@@ -63,6 +61,19 @@ class _HomePageState extends State<HomePage> {
         user: widget.user,
         route: _routeToSignInScreen(),
       ),
+      floatingActionButton: FloatingActionButton(
+        heroTag: 'button1',
+        splashColor: kBlueLightColor,
+        backgroundColor: kBlueColor,
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BillSplitHomePage(user: user)));
+        },
+        child: Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavWidget(
         size: size,
       ),
@@ -128,178 +139,36 @@ class _HomePageState extends State<HomePage> {
                       mainAxisSpacing: 20,
                       children: <Widget>[
                         CardWidget(
-                          src: "payments.svg",
-                          title: "Payments",
-                          press: () => getScreen(DetailsScreen(), context),
-                          key: UniqueKey(),
-                        ),
-                        CardWidget(
-                          src: "recents.svg",
-                          title: "Recent Splits!",
-                          press: () {},
+                          src: "new.svg",
+                          title: "New Split!",
+                          press: () =>
+                              getScreen(BillSplitHomePage(user: user), context),
                           key: UniqueKey(),
                         ),
                         CardWidget(
                           src: "friendsparty.svg",
                           title: "Friends",
-                          press: () {},
+                          press: () =>
+                              getScreen(Friendspage(user: user), context),
                           key: UniqueKey(),
                         ),
                         CardWidget(
-                          src: "new.svg",
-                          title: "New Split!",
-                          press: () => getScreen(NewSplit(), context),
+                          src: "settingsImage.svg",
+                          title: "Settings",
+                          press: () => {},
+                          key: UniqueKey(),
+                        ),
+                        CardWidget(
+                          src: "recents.svg",
+                          title: "Recent Splits!",
+                          press: () =>
+                              getScreen(RecentSplits(user: user), context),
                           key: UniqueKey(),
                         ),
                       ],
                     ),
                   ),
                 ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class SideBarUser extends StatefulWidget {
-  final size;
-  final drawerKey;
-  final User user;
-
-  const SideBarUser({Key key, this.size, this.drawerKey, this.user})
-      : super(key: key);
-  @override
-  _SideBarUserState createState() => _SideBarUserState();
-}
-
-class _SideBarUserState extends State<SideBarUser> {
-  bool isClicked = false;
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topRight,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(100),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            splashColor: kShadowColor,
-            onTap: () {
-              setState(() {
-                isClicked = true;
-              });
-              widget.drawerKey.currentState.openDrawer();
-              Timer(Duration(seconds: 1), () {
-                setState(() {
-                  isClicked = false;
-                });
-              });
-            },
-            child: Container(
-              alignment: Alignment.center,
-              height: widget.size.height * .045,
-              width: widget.size.width * .1,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: Color(0xFF817DCF),
-              ),
-              child: CircleAvatar(
-                backgroundColor: isClicked ? Colors.blue : Colors.transparent,
-                radius: 60.0,
-                child: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: CircleAvatar(
-                    radius: 60.0,
-                    child: ClipOval(
-                      child: widget.user.photoURL != null
-                          ? Image(
-                              image:
-                                  NetworkImage(widget.user.photoURL.toString()))
-                          : SvgPicture.asset('assets/icons/profile.svg'),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class SideBar extends StatefulWidget {
-  final User user;
-  final Route route;
-  const SideBar({Key key, this.user, this.route}) : super(key: key);
-  @override
-  _SideBarState createState() => _SideBarState();
-}
-
-class _SideBarState extends State<SideBar> {
-  @override
-  Widget build(BuildContext context) {
-    var key = UniqueKey().toString();
-    var accountName = widget.user.displayName != null
-        ? widget.user.displayName.toString()
-        : 'User' + key.substring(1, key.length - 1);
-    var email = widget.user.email != null
-        ? widget.user.email.toString()
-        : "test" + key.substring(1, key.length - 1) + "@gmail.com";
-    return Drawer(
-      child: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              children: <Widget>[
-                UserAccountsDrawerHeader(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/background.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  accountName: Text(
-                    accountName,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText1
-                        .copyWith(color: kTextColor),
-                  ),
-                  accountEmail: Text(
-                    email,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText1
-                        .copyWith(color: kTextColor),
-                  ),
-                  currentAccountPicture: CircleAvatar(
-                    child: ClipOval(
-                        child: widget.user.photoURL != null
-                            ? Image(
-                                image: NetworkImage(
-                                    widget.user.photoURL.toString()))
-                            : SvgPicture.asset('assets/icons/male.svg')),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            child: Align(
-              alignment: FractionalOffset.bottomCenter,
-              child: Container(
-                child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                        onTap: () async {
-                          await signOutGoogle(context: context);
-                          Navigator.of(context).pushReplacement(widget.route);
-                        },
-                        child: Icon(Icons.logout))),
               ),
             ),
           ),
