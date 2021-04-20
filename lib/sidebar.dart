@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'package:covidui/auth.dart';
+import 'package:covidui/screens/Dashboard.dart';
+import 'package:covidui/screens/aboutus.dart';
 import 'package:covidui/screens/billSplitter.dart';
 import 'package:covidui/screens/friendsPage.dart';
 import 'package:covidui/screens/recentSplit.dart';
+import 'package:covidui/screens/settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -191,7 +194,13 @@ class _SideBarState extends State<SideBar> {
                 ),
                 Divider(),
                 ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                DashboardScreen(user: widget.user)));
+                  },
                   title: Row(
                     children: [
                       Icon(Icons.calendar_today, color: Colors.blue),
@@ -201,7 +210,14 @@ class _SideBarState extends State<SideBar> {
                   ),
                 ),
                 ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SettingsPage(
+                                  user: widget.user,
+                                )));
+                  },
                   title: Row(
                     children: [
                       Icon(
@@ -215,7 +231,12 @@ class _SideBarState extends State<SideBar> {
                 ),
                 Divider(),
                 ListTile(
-                  onTap: () {},
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AboutUs(
+                                user: widget.user,
+                              ))),
                   title: Row(
                     children: [
                       Icon(Icons.badge, color: Colors.orange[200]),

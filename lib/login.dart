@@ -178,8 +178,8 @@ class _BodyState extends State<Body> {
                       icon: FaIcon(FontAwesomeIcons.github, color: kBlueColor)),
                   IconButton(
                       onPressed: () {},
-                      icon: FaIcon(FontAwesomeIcons.exclamation,
-                          color: kBlueColor)),
+                      icon:
+                          FaIcon(FontAwesomeIcons.snapchat, color: kBlueColor)),
                 ],
               ),
             ],

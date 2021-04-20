@@ -1,11 +1,13 @@
+import 'package:covidui/auth.dart';
 import 'package:covidui/bottomNav.dart';
 import 'package:covidui/cardWidget.dart';
+import 'package:covidui/chart.dart';
 import 'package:covidui/constants.dart';
 import 'package:covidui/login.dart';
 import 'package:covidui/screens/billSplitter.dart';
 import 'package:covidui/screens/friendsPage.dart';
 import 'package:covidui/screens/recentSplit.dart';
-import 'package:covidui/searchBar.dart';
+import 'package:covidui/screens/settings.dart';
 import 'package:covidui/sidebar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,25 +23,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   User user;
   bool isSigningOut = false;
-
-  Route _routeToSignInScreen() {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(-1.0, 0.0);
-        var end = Offset.zero;
-        var curve = Curves.ease;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-  }
 
   void initState() {
     user = widget.user;
@@ -59,7 +42,7 @@ class _HomePageState extends State<HomePage> {
       drawer: SideBar(
         key: UniqueKey(),
         user: widget.user,
-        route: _routeToSignInScreen(),
+        route: routeToSignInScreen(screen: LoginPage()),
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'button1',
@@ -76,6 +59,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavWidget(
         size: size,
+        user: user,
       ),
       body: Stack(
         children: <Widget>[
@@ -128,8 +112,18 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  SearchBarWidget(
-                    hintText: "Search People",
+                  SizedBox(height: size.height * .01),
+                  Text(
+                    "This Month Expenses",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline4
+                        .copyWith(fontSize: 16, fontWeight: FontWeight.w400),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+                    child: ExpensesChart(),
                   ),
                   Expanded(
                     child: GridView.count(
@@ -155,7 +149,11 @@ class _HomePageState extends State<HomePage> {
                         CardWidget(
                           src: "settingsImage.svg",
                           title: "Settings",
-                          press: () => {},
+                          press: () => getScreen(
+                              SettingsPage(
+                                user: user,
+                              ),
+                              context),
                           key: UniqueKey(),
                         ),
                         CardWidget(

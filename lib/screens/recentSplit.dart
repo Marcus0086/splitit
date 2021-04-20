@@ -1,11 +1,10 @@
-import 'dart:math';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:covidui/bottomNav.dart';
 import 'package:covidui/constants.dart';
 import 'package:covidui/store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:random_color/random_color.dart';
 
 class RecentSplits extends StatefulWidget {
   final User user;
@@ -89,13 +88,19 @@ class _RecentSplitsState extends State<RecentSplits> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                AutoSizeText(
-                                  "Title:$title",
-                                  wrapWords: true,
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.montserrat(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                Flexible(
+                                  flex: 1,
+                                  child: ClipRRect(
+                                    child: Text(
+                                      "Title:$title",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.fade,
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.montserrat(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
                                 ),
                                 Text(
                                   'Total:' + '\u20B9' + '$amount',
@@ -112,11 +117,6 @@ class _RecentSplitsState extends State<RecentSplits> {
                           ),
                           child != null ? child : Container(),
                         ]))))));
-  }
-
-  Color randColor({List<Color> colors}) {
-    final _random = Random();
-    return colors[_random.nextInt(colors.length)];
   }
 
   @override
@@ -139,14 +139,12 @@ class _RecentSplitsState extends State<RecentSplits> {
                               title: user[0],
                               amount: user[1],
                               size: size,
-                              color: randColor(colors: [
-                                Colors.red[200],
-                                Colors.blue[200],
-                                Colors.green[200],
-                                Colors.pink[100],
-                                kBlueLightColor,
-                                kBlueColor
-                              ]),
+                              color: RandomColor().randomColor(
+                                  colorBrightness: ColorBrightness.light,
+                                  colorHue: ColorHue.multiple(colorHues: [
+                                    ColorHue.blue,
+                                    ColorHue.orange
+                                  ])),
                             ),
                           ))
                       .toList()
@@ -169,7 +167,10 @@ class _RecentSplitsState extends State<RecentSplits> {
         child: Icon(Icons.home),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomNavWidget(size: size),
+      bottomNavigationBar: BottomNavWidget(
+        size: size,
+        user: user,
+      ),
     );
   }
 }

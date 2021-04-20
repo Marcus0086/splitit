@@ -89,6 +89,7 @@ class _BillSplitHomePageState extends State<BillSplitHomePage> {
         i++;
       }
       if (flag) {
+        Navigator.pop(context);
         showDialog(
             context: context,
             builder: (context) => CustomAlertDialog(
@@ -143,12 +144,40 @@ class _BillSplitHomePageState extends State<BillSplitHomePage> {
       }
     }
 
+    bool isVisible = false;
     var size = MediaQuery.of(context).size;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: kBlueColor,
         onPressed: () {
+          setState(() {
+            isVisible = true;
+          });
           FocusScope.of(context).requestFocus(new FocusNode());
+          isVisible
+              ? showDialog(
+                  context: context,
+                  builder: (context) => CustomAlertDialog(
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Processing',
+                              style: GoogleFonts.montserrat(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: size.height * .05),
+                            CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.red),
+                            ),
+                          ],
+                        ),
+                      ))
+              : Container();
           addUser();
         },
         child: Icon(Icons.done),
@@ -611,7 +640,15 @@ class _BillSplitHomePageState extends State<BillSplitHomePage> {
       ]),
       bottomNavigationBar: BottomNavWidget(
         size: MediaQuery.of(context).size,
-        svg: Icon(Icons.home_outlined),
+        svg: FloatingActionButton(
+          splashColor: kBlueLightColor,
+          onPressed: () {
+            Navigator.popUntil(context, (route) => route.isFirst);
+          },
+          child: Icon(Icons.home),
+          backgroundColor: kBlueColor,
+        ),
+        user: widget.user,
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'button2',

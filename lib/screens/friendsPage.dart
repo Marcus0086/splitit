@@ -191,7 +191,7 @@ class _FriendspageState extends State<Friendspage> {
               style: GoogleFonts.montserrat(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                fontStyle: FontStyle.italic,
+                fontStyle: FontStyle.normal,
               ),
             ),
           ),
@@ -229,19 +229,6 @@ class _FriendspageState extends State<Friendspage> {
           ),
         ],
       ),
-      appBar: AppBar(
-        backgroundColor: kBlueColor,
-        title: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('My Friends!'),
-            SizedBox(width: size.width * .025),
-            Icon(Icons.nature_people),
-          ],
-        ),
-        centerTitle: true,
-      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: kBlueColor,
         splashColor: kBlueLightColor,
@@ -251,7 +238,10 @@ class _FriendspageState extends State<Friendspage> {
         child: Icon(Icons.home),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomNavWidget(size: size),
+      bottomNavigationBar: BottomNavWidget(
+        size: size,
+        user: user,
+      ),
     );
   }
 }

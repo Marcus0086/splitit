@@ -1,12 +1,17 @@
 import 'package:covidui/constants.dart';
+import 'package:covidui/screens/Dashboard.dart';
+import 'package:covidui/screens/settings.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavWidget extends StatefulWidget {
-  final Icon svg;
+  final Widget svg;
+  final User user;
   const BottomNavWidget({
     Key key,
     this.size,
     this.svg,
+    @required this.user,
   }) : super(key: key);
 
   final Size size;
@@ -42,7 +47,7 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
           )
         ],
       ),
-      height: widget.size.height * .08,
+      height: widget.size.height * .09,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -57,22 +62,15 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
                 isActive2 = false;
                 isActive3 = false;
               });
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          DashboardScreen(user: widget.user)));
             },
             key: UniqueKey(),
           ),
-          BottomIcons(
-              svg: widget.svg != null
-                  ? (isActive2 ? Icons.home_rounded : Icons.home_outlined)
-                  : null,
-              isActive: isActive2,
-              press: () {
-                setState(() {
-                  isActive2 = !isActive2;
-                  isActive1 = false;
-                  isActive3 = false;
-                  Navigator.of(context).pop();
-                });
-              }),
+          widget.svg != null ? widget.svg : Container(),
           BottomIcons(
             svg: isActive3 ? Icons.settings_rounded : Icons.settings_outlined,
             isActive: isActive3,
@@ -82,6 +80,12 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
                 isActive1 = false;
                 isActive2 = false;
               });
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SettingsPage(
+                            user: widget.user,
+                          )));
             },
             key: UniqueKey(),
           ),
@@ -109,16 +113,12 @@ class _BottomIconsState extends State<BottomIcons> {
   @override
   Widget build(BuildContext context) {
     var svg = widget.svg;
-    return GestureDetector(
-      onTap: widget.press,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          RadiantGradientMask(
-              child: Icon(svg, color: Colors.white, size: 26),
-              colors: [Colors.deepPurple, Colors.deepPurpleAccent]),
-        ],
-      ),
+    return IconButton(
+      onPressed: widget.press,
+      iconSize: 22.5,
+      icon: RadiantGradientMask(
+          child: Icon(svg, color: Colors.white),
+          colors: [Colors.deepPurple, Colors.deepPurpleAccent]),
     );
   }
 }
