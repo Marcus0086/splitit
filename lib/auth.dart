@@ -94,12 +94,6 @@ Future<void> signOutGoogle({BuildContext context}) async {
   }
 }
 
-Future<User> signInAnonymously() async {
-  final UserCredential userCredential = await auth.signInAnonymously();
-  User user = userCredential.user;
-  return user;
-}
-
 Route routeToSignInScreen({@required dynamic screen}) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => screen,

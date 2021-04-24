@@ -30,16 +30,19 @@ class _FriendspageState extends State<Friendspage> {
         .get()
         .then((friend) {
       friend.data().forEach((key, value) {
-        value.forEach((keyq, valueq) {
-          keys.add([key, keyq, valueq['name']]);
-          Friends newFriend = Friends(
+        for (dynamic friends in value) {
+          friends.forEach((keyq, valueq) {
+            keys.add([key, keyq, valueq]);
+            Friends newFriend = Friends(
               name: valueq['name'],
               color: Color(int.parse(valueq['color'])),
-              image: valueq['image']);
-          setState(() {
-            friendsCardsList.add(newFriend);
+              image: valueq['image'],
+            );
+            setState(() {
+              friendsCardsList.add(newFriend);
+            });
           });
-        });
+        }
       });
     });
   }
@@ -50,16 +53,23 @@ class _FriendspageState extends State<Friendspage> {
     super.initState();
   }
 
-  Future<void> deleteUser({Friends friend}) async {
-    for (dynamic i in keys) {
-      var title = i[0];
-      if (i[2] == friend.name) {
+  deleteUser({Friends friend}) async {
+    for (dynamic key in keys) {
+      var title = key[0];
+      var friendsI = key[1];
+      if (key[2]['name'] == friend.name &&
+          Color(int.parse(key[2]['color'])) == friend.color &&
+          key[2]['image'] == friend.image) {
         await firestoreInstance
             .collection('users')
             .doc(user.uid)
             .collection('data')
             .doc(user.email)
-            .update({'$title': FieldValue.delete()});
+            .update({
+          '$title': FieldValue.arrayRemove([
+            {friendsI: friend.toJson()}
+          ])
+        });
       }
     }
   }
@@ -91,13 +101,14 @@ class _FriendspageState extends State<Friendspage> {
                 child: InkWell(
                     splashColor: splashColor,
                     child: Padding(
-                        padding: const EdgeInsets.all(6.0),
+                        padding: const EdgeInsets.all(2.0),
                         child: Stack(
                           children: [
                             Positioned(
                               top: 0,
                               right: 0,
                               child: IconButton(
+                                iconSize: 18,
                                 splashColor: splashColor,
                                 icon: Icon(
                                   Icons.close,
@@ -139,22 +150,22 @@ class _FriendspageState extends State<Friendspage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   SizedBox(
-                                    height: size.height * .025,
+                                    height: size.height * .01,
                                   ),
                                   SvgPicture.asset(
                                     image,
-                                    width: size.width * .05,
-                                    height: size.height * .05,
+                                    width: size.width * .04,
+                                    height: size.height * .04,
                                   ),
                                   SizedBox(
-                                    height: size.height * .045,
+                                    height: size.height * .025,
                                   ),
                                   Align(
                                     alignment: Alignment.center,
                                     child: Text(
                                       "$name",
                                       style: GoogleFonts.montserrat(
-                                          fontSize: 16,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
@@ -198,14 +209,14 @@ class _FriendspageState extends State<Friendspage> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
+                horizontal: 12.0,
                 vertical: 4.0,
               ),
               child: GridView.count(
-                crossAxisCount: 2,
-                childAspectRatio: 1.25,
-                crossAxisSpacing: 30,
-                mainAxisSpacing: 30,
+                crossAxisCount: 3,
+                childAspectRatio: 1,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20,
                 children: friendsCardsList.isNotEmpty
                     ? friendsCardsList
                         .map((friend) => friendsCards(

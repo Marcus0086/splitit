@@ -112,17 +112,9 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: size.height * .01),
-                  Text(
-                    "This Month Expenses",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline4
-                        .copyWith(fontSize: 16, fontWeight: FontWeight.w400),
-                  ),
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+                        const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
                     child: ExpensesChart(),
                   ),
                   Expanded(

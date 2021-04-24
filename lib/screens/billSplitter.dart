@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covidui/bottomNav.dart';
 import 'package:covidui/constants.dart';
 import 'package:covidui/screens/Friends.dart';
@@ -80,9 +81,9 @@ class _BillSplitHomePageState extends State<BillSplitHomePage> {
             .collection('data')
             .doc(widget.user.email)
             .update({
-          friend.hashCode.toString() + " " + this.title + " " + this.amount: {
-            'Friend$i': friend.toJson()
-          }
+          this.title + " " + this.amount: FieldValue.arrayUnion([
+            {'Friends$i': friend.toJson()}
+          ])
         }).then((value) {
           flag = true;
         });
@@ -150,35 +151,37 @@ class _BillSplitHomePageState extends State<BillSplitHomePage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: kBlueColor,
         onPressed: () {
-          setState(() {
-            isVisible = true;
-          });
-          FocusScope.of(context).requestFocus(new FocusNode());
-          isVisible
-              ? showDialog(
-                  context: context,
-                  builder: (context) => CustomAlertDialog(
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Processing',
-                              style: GoogleFonts.montserrat(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+          if (_titleTextEditingController.text.isNotEmpty) {
+            setState(() {
+              isVisible = true;
+            });
+            FocusScope.of(context).requestFocus(new FocusNode());
+            isVisible
+                ? showDialog(
+                    context: context,
+                    builder: (context) => CustomAlertDialog(
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Processing',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            SizedBox(height: size.height * .05),
-                            CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.red),
-                            ),
-                          ],
-                        ),
-                      ))
-              : Container();
-          addUser();
+                              SizedBox(height: size.height * .05),
+                              CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.red),
+                              ),
+                            ],
+                          ),
+                        ))
+                : Container();
+            addUser();
+          }
         },
         child: Icon(Icons.done),
       ),
@@ -569,8 +572,6 @@ class _BillSplitHomePageState extends State<BillSplitHomePage> {
                                             image: randImage(images: [
                                               'assets/icons/male.svg',
                                               'assets/icons/profile.svg',
-                                              'assets/icons/female.svg',
-                                              'assets/icons/female.svg',
                                               'assets/icons/profile.svg',
                                               'assets/icons/male.svg'
                                             ]),

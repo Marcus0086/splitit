@@ -62,11 +62,18 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
                 isActive2 = false;
                 isActive3 = false;
               });
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          DashboardScreen(user: widget.user)));
+              Future.delayed(Duration(milliseconds: 60), () {
+                setState(() {
+                  isActive1 = !isActive1;
+                });
+              });
+              Future.delayed(Duration(milliseconds: 60), () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            DashboardScreen(user: widget.user)));
+              });
             },
             key: UniqueKey(),
           ),
@@ -80,12 +87,19 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
                 isActive1 = false;
                 isActive2 = false;
               });
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SettingsPage(
-                            user: widget.user,
-                          )));
+              Future.delayed(Duration(milliseconds: 60), () {
+                setState(() {
+                  isActive3 = !isActive3;
+                });
+              });
+              Future.delayed(Duration(milliseconds: 60), () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SettingsPage(
+                              user: widget.user,
+                            )));
+              });
             },
             key: UniqueKey(),
           ),

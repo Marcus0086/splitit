@@ -194,10 +194,16 @@ class _SettingsPageState extends State<SettingsPage> {
                 Divider(),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
+                  child: CircleAvatar(
+                    child: Image(image: AssetImage('assets/images/logo.png')),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
                   child: Center(
                     child: Text(
                       'Copyright by AdditcoX 2021',
-                      style: GoogleFonts.montserrat(fontSize: 16),
+                      style: GoogleFonts.montserrat(fontSize: 12),
                     ),
                   ),
                 ),

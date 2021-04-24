@@ -19,7 +19,7 @@ class _ExpensesChartState extends State<ExpensesChart> {
     return Stack(
       children: <Widget>[
         AspectRatio(
-          aspectRatio: 2.8,
+          aspectRatio: 3,
           child: Container(
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(
@@ -185,7 +185,7 @@ class _ExpensesChartState extends State<ExpensesChart> {
           getTitles: (value) {
             switch (value.toInt()) {
               case 2:
-                return 'JUM';
+                return 'JUN';
               case 5:
                 return 'JUL';
               case 8:

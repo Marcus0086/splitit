@@ -27,7 +27,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         elevation: 0,
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(
-          color: Colors.grey, //change your color here
+          color: Colors.grey,
         ),
         centerTitle: true,
         title: Text(

@@ -59,6 +59,9 @@ class _BodyState extends State<Body> {
 
   String _openInsta = 'https://www.instagram.com/raghav0gupta/';
   String _opengit = 'https://github.com/Marcus0086';
+  String _signUpGoogle =
+      "https://accounts.google.com/signup/v2/webcreateaccount?hl=en&flowName=GlifWebSignIn&flowEntry=SignUp&nogm=true";
+  String _openTwitter = "https://twitter.com/RaghavG54140751";
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -117,8 +120,13 @@ class _BodyState extends State<Body> {
             } else if (snapshot.connectionState == ConnectionState.done) {
               return SignInButton(
                 key: UniqueKey(),
-                press: signInAnonymously,
-                text: 'Sign In with Guest!',
+                press: () async {
+                  await canLaunch(_signUpGoogle)
+                      ? await launch(_signUpGoogle)
+                      : customSnackBar(
+                          content: 'Cannot open url $_signUpGoogle');
+                },
+                text: 'Sign Up with Google',
                 icon: Icon(
                   Icons.account_circle_sharp,
                   color: Colors.white,
@@ -177,9 +185,14 @@ class _BodyState extends State<Body> {
                       },
                       icon: FaIcon(FontAwesomeIcons.github, color: kBlueColor)),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        await canLaunch(_openTwitter)
+                            ? await launch(_openTwitter)
+                            : customSnackBar(
+                                content: 'Cannot open url $_openTwitter');
+                      },
                       icon:
-                          FaIcon(FontAwesomeIcons.snapchat, color: kBlueColor)),
+                          FaIcon(FontAwesomeIcons.twitter, color: kBlueColor)),
                 ],
               ),
             ],

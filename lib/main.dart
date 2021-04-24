@@ -15,7 +15,8 @@ void main() async {
   var _clientID = new ClientId(Secret.getId(), "");
   const _scopes = const [cal.CalendarApi.calendarScope];
   await clientViaUserConsent(_clientID, _scopes, prompt)
-      .then((AuthClient client) async {
+      .then((AuthClient client) {
+    print(client);
     CalendarClient.calendar = cal.CalendarApi(client);
   });
   runApp(Phoenix(child: SplitItApp()));

@@ -3,8 +3,7 @@ import 'package:covidui/constants.dart';
 import 'package:covidui/store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:random_color/random_color.dart';
+import 'package:flutter_svg/svg.dart';
 
 class RecentSplits extends StatefulWidget {
   final User user;
@@ -18,7 +17,9 @@ class _RecentSplitsState extends State<RecentSplits> {
   User user;
   Set keys = Set();
   List userCards = [];
-  void getFriends(User user) async {
+  List allFriends = [];
+  bool shShown = false;
+  getFriends(User user) async {
     await firestoreInstance
         .collection('users')
         .doc(user.uid)
@@ -27,96 +28,33 @@ class _RecentSplitsState extends State<RecentSplits> {
         .get()
         .then((friend) {
       friend.data().forEach((key, value) {
+        List names = [];
         var kv = key.split(' ');
-        kv.removeAt(0);
-        keys.add(kv.join(" ").toString());
+        var fkv = kv.join(" ").toString();
+        for (dynamic friends in value) {
+          friends.forEach((keyq, valueq) {
+            names.add(valueq['name']);
+          });
+        }
+        allFriends.add([fkv, names]);
+        keys.add(fkv);
       });
     });
     for (String key in keys) {
       var titleLi = key.split(' ');
       var amount = titleLi.removeLast();
-      var title = titleLi.join().toString();
-      setState(() {
-        userCards.add([title, amount]);
-      });
+      var title = titleLi.join(" ").toString();
+      userCards.add([title, amount]);
     }
   }
 
   void initState() {
     user = widget.user;
-    getFriends(user);
     super.initState();
   }
 
   void dispose() {
     super.dispose();
-  }
-
-  Widget friendsCards(
-      {BuildContext context,
-      @required String title,
-      Widget child,
-      @required String amount,
-      @required Size size,
-      @required Color color,
-      Color splashColor}) {
-    return ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-            decoration: BoxDecoration(
-              color: color,
-              boxShadow: [
-                BoxShadow(
-                  color: kShadowColor,
-                  offset: Offset(0, 17),
-                  spreadRadius: -23,
-                  blurRadius: 17,
-                )
-              ],
-            ),
-            child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                    splashColor:
-                        splashColor != null ? splashColor : Colors.grey,
-                    child: Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: Row(children: <Widget>[
-                          Align(
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Flexible(
-                                  flex: 1,
-                                  child: ClipRRect(
-                                    child: Text(
-                                      "Title:$title",
-                                      maxLines: 1,
-                                      overflow: TextOverflow.fade,
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.montserrat(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  'Total:' + '\u20B9' + '$amount',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.montserrat(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
-                          ),
-                          Spacer(
-                            flex: 1,
-                          ),
-                          child != null ? child : Container(),
-                        ]))))));
   }
 
   @override
@@ -125,32 +63,83 @@ class _RecentSplitsState extends State<RecentSplits> {
     return Scaffold(
       body: Column(
         children: [
-          Expanded(
-            child: GridView.count(
-              crossAxisCount: 1,
-              childAspectRatio: 4,
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
-              children: userCards.isNotEmpty
-                  ? userCards
-                      .map((user) => Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: friendsCards(
-                              title: user[0],
-                              amount: user[1],
-                              size: size,
-                              color: RandomColor().randomColor(
-                                  colorBrightness: ColorBrightness.light,
-                                  colorHue: ColorHue.multiple(colorHues: [
-                                    ColorHue.blue,
-                                    ColorHue.orange
-                                  ])),
-                            ),
-                          ))
-                      .toList()
-                  : [Container()],
-            ),
-          ),
+          FutureBuilder(
+              future: getFriends(user),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error getting data!');
+                } else if (snapshot.connectionState == ConnectionState.done) {
+                  return Expanded(
+                    child: ListView(
+                      children: userCards
+                          .map((user) => Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(19)),
+                                elevation: 8.0,
+                                margin: new EdgeInsets.symmetric(
+                                    horizontal: 10.0, vertical: 6.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Color.fromRGBO(64, 75, 96, .9)),
+                                  child: Center(
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 10.0),
+                                      leading: Container(
+                                        padding: EdgeInsets.only(right: 12.0),
+                                        decoration: new BoxDecoration(
+                                            border: new Border(
+                                                right: new BorderSide(
+                                                    width: 1.0,
+                                                    color: Colors.white24))),
+                                        child: Icon(Icons.people,
+                                            color: Colors.white),
+                                      ),
+                                      title: Text(
+                                        '${user[0]}',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      subtitle: Text(
+                                          'Amount: ' + '\u20B9' + '${user[1]}',
+                                          style:
+                                              TextStyle(color: Colors.white)),
+                                    ),
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                    ),
+                  );
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: SvgPicture.asset(
+                        'assets/icons/nothinghere.svg',
+                        height: size.height * .25,
+                      ),
+                    ),
+                    SizedBox(height: size.height * .025),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'No Events',
+                        style: TextStyle(
+                          color: Colors.black38,
+                          fontFamily: 'Raleway',
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }),
         ],
       ),
       appBar: AppBar(
