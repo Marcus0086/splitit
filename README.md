@@ -5,16 +5,12 @@
 
 ## UI of application
 
-### Login Page!
-
-- [<img align="left" alt="login" width="150px" src="https://github.com/Marcus0086/splitit/blob/master/assets/images/screenshots/login.png?raw=true" />][website]
-
-# 
-
-### New Split!
-
+- Login Page!
+- [<img align="left" alt="login" width="150px" src="https://github.com/Marcus0086/splitit/blob/master/assets/images/screenshots/login.png?raw=true" />][website] 
+- New Split!
 - [<img align="left" alt="login" width="150px" src="https://github.com/Marcus0086/splitit/blob/master/assets/images/screenshots/NewSplit.png?raw=true" />][website]
 
+<br />
 
 ### Spotify Playing 🎧
 
@@ -34,9 +30,9 @@
 
 [<img align="left" alt="Visual Studio Code" width="26px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/visual-studio-code/visual-studio-code.png" />](https://code.visualstudio.com/)
 
-[<img align="left" alt="Flutter" width="150px" src="https://flutter.dev/assets/flutter-lockup-1caf6476beed76adec3c477586da54de6b552b2f42108ec5bc68dc63bae2df75.png" />](https://flutter.dev/?gclid=Cj0KCQjwppSEBhCGARIsANIs4p68oB5N-HuUuV0mJVhGrhQrljG5FhdggbbUDLzPx6xTcR9qNSzEF3saAlfGEALw_wcB&gclsrc=aw.ds)
+[<img align="left" alt="Flutter" width="100px" src="https://flutter.dev/assets/flutter-lockup-1caf6476beed76adec3c477586da54de6b552b2f42108ec5bc68dc63bae2df75.png" />](https://flutter.dev/?gclid=Cj0KCQjwppSEBhCGARIsANIs4p68oB5N-HuUuV0mJVhGrhQrljG5FhdggbbUDLzPx6xTcR9qNSzEF3saAlfGEALw_wcB&gclsrc=aw.ds)
 
-[<img align="left" alt="Firebase" width="150px" src="https://www.gstatic.com/devrel-devsite/prod/vdb246b8cc5a5361484bf12c07f2d17c993026d30a19ea3c7ace6f0263f62c0dd/firebase/images/lockup.png" />](https://firebase.google.com/)
+[<img align="left" alt="Firebase" width="100px" src="https://www.gstatic.com/devrel-devsite/prod/vdb246b8cc5a5361484bf12c07f2d17c993026d30a19ea3c7ace6f0263f62c0dd/firebase/images/lockup.png" />](https://firebase.google.com/)
 
 [<img align="left" alt="Git" width="26px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/git/git.png" />](https://git-scm.com/)
 
