@@ -5,12 +5,8 @@
 
 ## UI of application
 
-- Login Page!
-- [<img align="left" alt="login" width="150px" src="https://github.com/Marcus0086/splitit/blob/master/assets/images/screenshots/login.png?raw=true" />][website] 
-- New Split!
-- [<img align="left" alt="login" width="150px" src="https://github.com/Marcus0086/splitit/blob/master/assets/images/screenshots/NewSplit.png?raw=true" />][website]
-
-<br />
+- Login Page!(https://github.com/Marcus0086/splitit/blob/master/assets/images/screenshots/login.png?raw=true)
+- New Split!(https://github.com/Marcus0086/splitit/blob/master/assets/images/screenshots/NewSplit.png?raw=true)
 
 ### Spotify Playing 🎧
 
