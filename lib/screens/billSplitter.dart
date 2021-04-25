@@ -221,22 +221,24 @@ class _BillSplitHomePageState extends State<BillSplitHomePage> {
             ),
           ),
           Expanded(
-            child: ListView(
-              children: friendsCardsList
-                  .map((friend) => Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: friendsCards(
-                            friend: friend,
-                            child: Icon(Icons.done, color: Colors.green[400]),
-                            amount: this.amount,
-                            image: friend.image,
-                            size: size,
-                            color: friend.color,
-                            splashColor: Colors.red),
-                      ))
-                  .toList(),
-            ),
-          ),
+              child: ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: friendsCardsList.length,
+                  itemBuilder: (BuildContext context, index) {
+                    var friend = friendsCardsList[index];
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: friendsCards(
+                          friend: friend,
+                          child: Icon(Icons.done, color: Colors.green[400]),
+                          amount: this.amount,
+                          image: friend.image,
+                          size: size,
+                          color: friend.color,
+                          splashColor: Colors.red),
+                    );
+                  })),
           Padding(
             padding:
                 const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
@@ -348,8 +350,9 @@ class _BillSplitHomePageState extends State<BillSplitHomePage> {
     return Scaffold(
       body: Stack(children: [
         SafeArea(
-            bottom: true,
-            child: ListView(children: [
+          bottom: true,
+          child: ListView(
+            children: [
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -606,38 +609,37 @@ class _BillSplitHomePageState extends State<BillSplitHomePage> {
                 height: size.height * .28,
                 child: Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: ListView(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      children: friendsCardsList.length > 0
-                          ? friendsCardsList
-                              .map((friend) => Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: friendsCards(
-                                        friend: friend,
-                                        child: FloatingActionButton(
-                                            heroTag: UniqueKey().toString(),
-                                            backgroundColor: friend.color,
-                                            elevation: 0,
-                                            onPressed: () {
-                                              setState(() {
-                                                friendsCardsList.removeAt(
-                                                    friendsCardsList
-                                                        .indexOf(friend));
-                                              });
-                                            },
-                                            child: Icon(Icons.delete_forever)),
-                                        amount: this.amount,
-                                        image: friend.image,
-                                        size: size,
-                                        color: friend.color,
-                                        splashColor: Colors.red),
-                                  ))
-                              .toList()
-                          : [Container()],
-                    )),
+                    child: ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        itemCount: friendsCardsList.length,
+                        itemBuilder: (BuildContext context, index) {
+                          var friend = friendsCardsList[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: friendsCards(
+                                friend: friend,
+                                child: FloatingActionButton(
+                                    heroTag: UniqueKey().toString(),
+                                    backgroundColor: friend.color,
+                                    elevation: 0,
+                                    onPressed: () {
+                                      setState(() {
+                                        friendsCardsList.removeAt(
+                                            friendsCardsList.indexOf(friend));
+                                      });
+                                    },
+                                    child: Icon(Icons.delete_forever)),
+                                amount: this.amount,
+                                image: friend.image,
+                                size: size,
+                                color: friend.color,
+                                splashColor: Colors.red),
+                          );
+                        })),
               ),
-            ]))
+            ],
+          ),
+        ),
       ]),
       bottomNavigationBar: BottomNavWidget(
         size: MediaQuery.of(context).size,

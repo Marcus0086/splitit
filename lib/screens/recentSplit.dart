@@ -70,48 +70,47 @@ class _RecentSplitsState extends State<RecentSplits> {
                   return Text('Error getting data!');
                 } else if (snapshot.connectionState == ConnectionState.done) {
                   return Expanded(
-                    child: ListView(
-                      children: userCards
-                          .map((user) => Card(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(19)),
-                                elevation: 8.0,
-                                margin: new EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 6.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Color.fromRGBO(64, 75, 96, .9)),
-                                  child: Center(
-                                    child: ListTile(
-                                      contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 20.0, vertical: 10.0),
-                                      leading: Container(
-                                        padding: EdgeInsets.only(right: 12.0),
-                                        decoration: new BoxDecoration(
-                                            border: new Border(
-                                                right: new BorderSide(
-                                                    width: 1.0,
-                                                    color: Colors.white24))),
-                                        child: Icon(Icons.people,
-                                            color: Colors.white),
-                                      ),
-                                      title: Text(
-                                        '${user[0]}',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      subtitle: Text(
-                                          'Amount: ' + '\u20B9' + '${user[1]}',
-                                          style:
-                                              TextStyle(color: Colors.white)),
+                      child: ListView.builder(
+                          itemCount: userCards.length,
+                          itemBuilder: (BuildContext context, index) {
+                            var user = userCards[index];
+                            return Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(19)),
+                              elevation: 8.0,
+                              margin: new EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: Center(
+                                  child: ListTile(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 10.0),
+                                    leading: Container(
+                                      padding: EdgeInsets.only(right: 12.0),
+                                      decoration: new BoxDecoration(
+                                          border: new Border(
+                                              right: new BorderSide(
+                                                  width: 1.0,
+                                                  color: Colors.white24))),
+                                      child: Icon(Icons.people,
+                                          color: Colors.white),
                                     ),
+                                    title: Text(
+                                      '${user[0]}',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    subtitle: Text(
+                                        'Amount: ' + '\u20B9' + '${user[1]}',
+                                        style: TextStyle(color: Colors.white)),
                                   ),
                                 ),
-                              ))
-                          .toList(),
-                    ),
-                  );
+                              ),
+                            );
+                          }));
                 }
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.center,

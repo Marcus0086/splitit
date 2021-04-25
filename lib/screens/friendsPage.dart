@@ -208,36 +208,27 @@ class _FriendspageState extends State<Friendspage> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12.0,
-                vertical: 4.0,
-              ),
-              child: GridView.count(
-                crossAxisCount: 3,
-                childAspectRatio: 1,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20,
-                children: friendsCardsList.isNotEmpty
-                    ? friendsCardsList
-                        .map((friend) => friendsCards(
-                            context: context,
-                            friend: friend,
-                            name: friend.name,
-                            image: friend.image,
-                            size: size,
-                            color: friend.color,
-                            splashColor: friend.color))
-                        .toList()
-                    : [
-                        Container(
-                          child: Center(
-                              child: SvgPicture.asset(
-                                  'assets/icons/nothinghere.svg')),
-                        )
-                      ],
-              ),
+              padding: const EdgeInsets.all(16.0),
+              child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 150,
+                      childAspectRatio: 1,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20),
+                  itemCount: friendsCardsList.length,
+                  itemBuilder: (BuildContext context, index) {
+                    var friend = friendsCardsList[index];
+                    return friendsCards(
+                        context: context,
+                        friend: friend,
+                        name: friend.name,
+                        image: friend.image,
+                        size: size,
+                        color: friend.color,
+                        splashColor: friend.color);
+                  }),
             ),
-          ),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
