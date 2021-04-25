@@ -11,7 +11,7 @@
 - [<img align="left" alt="login" width="150px" src="https://github.com/Marcus0086/splitit/blob/master/assets/images/screenshots/NewSplit.png?raw=true" />][website]
 
 <br />
-
+d
 ### Spotify Playing 🎧
 
 [<img src="https://now-playing-codestackr.vercel.app/api/spotify-playing" alt="AdditcoX Spotify Playing" width="350" />](https://open.spotify.com/?_gl=1*1j9zrqt*_gcl_aw*R0NMLjE2MTkzNDc4MzcuQ2owS0NRandwcFNFQmhDR0FSSXNBTklzNHA1NXkyNW5ZcHNKUmdoTFNyU2xnR3JNdlNLT0lEZ1ZOUFQwbEpoZ2JWbmU0ZFUxWVZCVC1zSWFBcGNMRUFMd193Y0I.*_gcl_dc*R0NMLjE2MTkzNDc4MzcuQ2owS0NRandwcFNFQmhDR0FSSXNBTklzNHA1NXkyNW5ZcHNKUmdoTFNyU2xnR3JNdlNLT0lEZ1ZOUFQwbEpoZ2JWbmU0ZFUxWVZCVC1zSWFBcGNMRUFMd193Y0I.&_ga=2.64304619.577986972.1619347814-1218930918.1618132103&_gac=1.55957209.1619347837.Cj0KCQjwppSEBhCGARIsANIs4p55y25nYpsJRghLSrSlgGrMvSKOIDgVNPT0lJhgbVne4dU1YVBT-sIaApcLEALw_wcB)
