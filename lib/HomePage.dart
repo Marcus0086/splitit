@@ -23,10 +23,31 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   User user;
   bool isSigningOut = false;
-
+  var _gridViewController;
+  double height = 0;
+  double aspectratio = 1.5;
   void initState() {
     user = widget.user;
+    _gridViewController = ScrollController();
+    _gridViewController.addListener(_scrollEvent);
     super.initState();
+  }
+
+  _scrollEvent() {
+    if (_gridViewController.offset > 0 &&
+        !_gridViewController.position.outOfRange) {
+      setState(() {
+        height = 180;
+        aspectratio = 2.5;
+      });
+    } else if (_gridViewController.offset <=
+            _gridViewController.position.minScrollExtent &&
+        !_gridViewController.position.outOfRange) {
+      setState(() {
+        height = 0;
+        aspectratio = 1.5;
+      });
+    }
   }
 
   getScreen(var screen, var context) {
@@ -115,47 +136,71 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding:
                         const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
-                    child: ExpensesChart(),
+                    child: AnimatedContainer(
+                      width: size.width,
+                      height: height == 0 ? size.height * .35 : height,
+                      duration: Duration(milliseconds: 360),
+                      child: LineChartSample1(
+                        aspectratio: aspectratio,
+                      ),
+                    ),
                   ),
                   Expanded(
-                    child: GridView.count(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20,
-                      children: <Widget>[
-                        CardWidget(
-                          src: "new.svg",
-                          title: "New Split!",
-                          press: () =>
-                              getScreen(BillSplitHomePage(user: user), context),
-                          key: UniqueKey(),
-                        ),
-                        CardWidget(
-                          src: "friendsparty.svg",
-                          title: "Friends",
-                          press: () =>
-                              getScreen(Friendspage(user: user), context),
-                          key: UniqueKey(),
-                        ),
-                        CardWidget(
-                          src: "settingsImage.svg",
-                          title: "Settings",
-                          press: () => getScreen(
-                              SettingsPage(
-                                user: user,
-                              ),
-                              context),
-                          key: UniqueKey(),
-                        ),
-                        CardWidget(
-                          src: "recents.svg",
-                          title: "Recent Splits!",
-                          press: () =>
-                              getScreen(RecentSplits(user: user), context),
-                          key: UniqueKey(),
-                        ),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 2, vertical: 8),
+                      child: GridView.builder(
+                          controller: _gridViewController,
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 300,
+                                  childAspectRatio: 1,
+                                  crossAxisSpacing: 20,
+                                  mainAxisSpacing: 20),
+                          itemCount: 4,
+                          itemBuilder: (BuildContext context, index) {
+                            Function getPage() {
+                              return index == 0
+                                  ? getScreen(
+                                      BillSplitHomePage(user: user), context)
+                                  : index == 1
+                                      ? getScreen(
+                                          Friendspage(user: user), context)
+                                      : index == 2
+                                          ? getScreen(
+                                              SettingsPage(user: user), context)
+                                          : index == 3
+                                              ? getScreen(
+                                                  RecentSplits(
+                                                    user: user,
+                                                  ),
+                                                  context)
+                                              : null;
+                            }
+
+                            return CardWidget(
+                              key: UniqueKey(),
+                              title: index == 0
+                                  ? 'New Split'
+                                  : index == 1
+                                      ? 'All Friends'
+                                      : index == 2
+                                          ? 'Settings'
+                                          : index == 3
+                                              ? 'Recent Splits!'
+                                              : '',
+                              src: index == 0
+                                  ? 'new.svg'
+                                  : index == 1
+                                      ? 'friendsparty.svg'
+                                      : index == 2
+                                          ? 'settingsImage.svg'
+                                          : index == 3
+                                              ? 'recents.svg'
+                                              : '',
+                              press: getPage,
+                            );
+                          }),
                     ),
                   ),
                 ],
