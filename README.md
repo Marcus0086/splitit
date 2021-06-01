@@ -41,6 +41,7 @@
 ### Other Projects:
 - [Data Structures and Algorithms Visualiser](https://dsalgoapp.netlify.app/)
 - [Color Pallete Maker](https://palletemon.vercel.app/)
+- [Sudoku Api](https://sudoku-api.vercel.app/)
 
 [website]: https://dsalgoapp.netlify.app/#/
 [twitter]: https://twitter.com/RaghavG54140751
