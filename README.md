@@ -48,4 +48,3 @@
 [instagram]: https://www.instagram.com/raghav0gupta/
 [linkedin]: https://www.linkedin.com/in/marcus-gupta-4a63341b5/
  
-[hello](javascript:alert('xss'))
